@@ -29,6 +29,12 @@ module.exports = function(options) {
     var strCss = '@import ' + cssImport.import + ';' + '\n\n';
     return strCss;
   };
+  
+  // Process @charset declarations
+  var processCharset = function(cssImport) {
+    var strCss = '@charset ' + cssImport.import + ';' + '\n\n';
+    return strCss;
+  };
 
   // Process comments
   var processComment = function(comment) {
@@ -282,6 +288,13 @@ module.exports = function(options) {
     var outputImports = function(base){
       base.forEach(function (rule) {
         strStyles += processImport(rule);
+      });
+    };
+    
+    // Function to output CSS @charset eclaratiosn
+    var outputCharset = function(base){
+      base.forEach(function (rule) {
+        strStyles += processCharset(rule);
       });
     };
 
