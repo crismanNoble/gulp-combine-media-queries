@@ -29,10 +29,10 @@ module.exports = function(options) {
     var strCss = '@import ' + cssImport.import + ';' + '\n\n';
     return strCss;
   };
-  
-  // Process @charset declarations
-  var processCharset = function(cssImport) {
-    var strCss = '@charset ' + cssImport.import + ';' + '\n\n';
+
+  // Process Charsets
+  var processCharset = function(cssCharset) {
+    var strCss = '@charset ' + cssCharset.charset + ';' + '\n\n';
     return strCss;
   };
 
@@ -144,6 +144,7 @@ module.exports = function(options) {
     log('File ' + filename + ' found.');
 
     processedCSS.imports = [];
+    processedCSS.charsets = [];
     processedCSS.base = [];
     processedCSS.media = [];
     processedCSS.media.all = [];
@@ -163,6 +164,11 @@ module.exports = function(options) {
       // If the rule type is an import
       if(rule.type === 'import') {
         processedCSS.imports.push(rule);
+      }
+
+      //If the rule type is a charset
+      if(rule.type === 'charset') {
+        processedCSS.charsets.push(rule);
       }
 
       // if the rule is a media query...
@@ -290,9 +296,9 @@ module.exports = function(options) {
         strStyles += processImport(rule);
       });
     };
-    
-    // Function to output CSS @charset eclaratiosn
-    var outputCharset = function(base){
+
+    // Function to output CSS charset declarations
+    var outputCharsets = function(base){
       base.forEach(function (rule) {
         strStyles += processCharset(rule);
       });
@@ -326,6 +332,11 @@ module.exports = function(options) {
         strStyles += processKeyframes(keyframe);
       });
     };
+
+    // Check if the charsets CSS was processed and print them
+    if (processedCSS.charsets.length !== 0){
+      outputCharsets(processedCSS.charsets);
+    }
 
     // Check if the imports CSS was processed and print them
     if (processedCSS.imports.length !== 0){
